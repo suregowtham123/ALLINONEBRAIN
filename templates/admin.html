@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            background-color: #ffa500;
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #fff;
+        }
+        table {
+            background-color: #fff;
+            color: #000;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff7300;
+            color: white;
+        }
+        .delete-btn {
+            background-color: #e60000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #222;
+            padding: 15px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, Admin</h1>
+
+    <h2>User List</h2>
+
+    <table>
+        <tr><th>Email</th><th>Delete</th></tr>
+        {% for email in users %}
+        <tr>
+            <td>{{ email }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_user') }}">
+                    <input type="hidden" name="email" value="{{ email }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>User Activity Log</h2>
+    <table>
+        <tr>
+            <th>Email</th>
+            <th>Page Visited</th>
+            <th>Time Spent (s)</th>
+        </tr>
+        {% for entry in log_entries %}
+        <tr>
+            <td>{{ entry.email }}</td>
+            <td>{{ entry.page }}</td>
+            <td>{{ entry.time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/logout" class="btn btn-danger" style="float: right; margin: 10px;">Logout</a>
+
+    <h2>Select Email to View Pie Chart</h2>
+<select id="emailSelect" onchange="loadPieChart(this.value)">
+    <option value="">-- Select an Email --</option>
+    {% for email in user_emails %}
+        <option value="{{ email }}">{{ email }}</option>
+    {% endfor %}
+</select>
+
+
+    <div style="text-align:center; margin-top: 20px;">
+        <canvas id="activityChart" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Chart.js Script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Your Pie Chart Script -->
+    <script>
+    let chartInstance = null;
+
+    function loadPieChart(email) {
+        if (!email) return;
+
+        fetch(`/get_user_activity?email=${email}`)
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('activityChart').getContext('2d');
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Time Spent (seconds)',
+                            data: data.values,
+                            backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                        }]
+                    }
+                });
+            }).catch(error => {
+                console.error("Error loading chart:", error);
+            });
+    }
+
+    setInterval(() => {
+        const selectedEmail = document.getElementById('emailSelect').value;
+        if (selectedEmail) {
+            loadPieChart(selectedEmail);
+        }
+    }, 5000);
+    </script>
+</body>
+</html>

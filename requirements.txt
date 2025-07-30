@@ -1,0 +1,6 @@
+Flask
+requests
+cohere
+groq
+google-generativeai
+python-dotenv

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <style>
+    /* Existing styles unchanged... */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .background {
+      background-image: url("{{ url_for('static', filename='logo.png') }}");
+      background-size: 70%;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.05;
+      position: fixed;
+      height: 100%;
+      width: 100%;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 30px;
+    }
+
+    .user-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .username {
+      font-weight: bold;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      background-color: white;
+      min-width: 120px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .center-content {
+      text-align: center;
+      margin-top: 80px;
+    }
+
+    .main-heading {
+      font-size: 36px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+    }
+
+    .button-group {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .dashboard-btn:hover {
+      background-color: #0277bd;
+    }
+
+    .user-list-box {
+      margin: 60px auto 30px;
+      padding: 20px 30px;
+      max-width: 500px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      color: black;
+      text-align: left;
+    }
+
+    .user-list-box h2 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .user-list-box ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    .user-list-box li {
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="overlay"></div>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="user-dropdown" onclick="toggleDropdown()">
+      <img src="{{ url_for('static', filename='profile.png') }}" alt="Profile" class="profile-pic">
+      <span class="username">{{ session['user_email'] }}</span>
+      <div id="dropdown" class="dropdown-content">
+        <a href="{{ url_for('logout') }}">Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center Content -->
+  <div class="center-content">
+    <h1 class="main-heading">WELCOME TO ALL-IN-ONE-BRAIN</h1>
+    <div class="button-group">
+      <a href="{{ url_for('bot_analyzer') }}" class="dashboard-btn">🤖 AI Answer Analyzer</a>
+      <a href="/courses" class="dashboard-btn">📘 Learning Courses</a>
+      <form action="/datasets" method="GET" style="display:inline;">
+        <button type="submit" class="dashboard-btn">📊 Dataset Finder</button>
+      </form>
+    </div>
+  </div>
+
+  {% if is_admin %}
+  <h2>Welcome, Admin</h2>
+  <a href="{{ url_for('user_list') }}">👥 View All Users</a>
+  <!-- Admin features -->
+{% else %}
+  <h2>Welcome, {{ session['username'] }}</h2>
+  <!-- User features only -->
+{% endif %}
+
+
+  <script>
+    function toggleDropdown() {
+      var dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    document.addEventListener('click', function (event) {
+      var dropdown = document.getElementById("dropdown");
+      var profile = document.querySelector('.user-dropdown');
+      if (!profile.contains(event.target)) {
+        dropdown.style.display = "none";
+      }
+    });
+   
+  window.onload = () => fetch('/start_section/{{ section_name }}');
+  window.onbeforeunload = null;
+
+
+  </script>
+</body>
+</html>

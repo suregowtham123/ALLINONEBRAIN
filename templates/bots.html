@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Answer Analyzer</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe4f0, #ffccd5);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #c2185b;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 16px;
+      position: relative;
+    }
+
+    .username button {
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #5e35b1;
+    }
+
+    #profileDropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 999;
+    }
+
+    #profileDropdown a {
+      display: block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #c2185b;
+    }
+
+    #profileDropdown a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #c2185b;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 2px solid #f06292;
+      border-radius: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: linear-gradient(to right, #f06292, #ec407a);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #ec407a, #f06292);
+    }
+
+    .response-block {
+      background-color: #fff0f6;
+      padding: 20px;
+      margin-top: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .response-block h3 {
+      margin-top: 0;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 10px;
+      display: inline-block;
+      font-size: 18px;
+    }
+
+    .groq h3 { background: #ff7043; }
+    .gemini h3 { background: #5c6bc0; }
+    .cohere h3 { background: #ab47bc; }
+    .final h3 { background: #26a69a; }
+
+    pre {
+      background: #272822;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+
+    .copy-icon-btn {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #c2185b;
+    }
+
+    .copy-icon-btn:hover {
+      color: #880e4f;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .select-wrapper {
+      margin-bottom: 20px;
+    }
+    
+.back-to-dashboard {
+  margin: 20px;
+  text-align: left;
+}
+
+.back-to-dashboard a {
+  text-decoration: none;
+  background-color: #1a73e8;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-dashboard a:hover {
+  background-color: #0f5fc0;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" />
+      <h2>AII-IN-ONE-BRAIN</h2>
+    </div>
+    <div class="username">
+      <button onclick="toggleDropdown()">👤 {{ username }} ⏷</button>
+      <div id="profileDropdown">
+        <a href="/logout">🚪 Logout</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>AI Answer Analyzer</h1>
+
+    <input type="text" id="questionInput" placeholder="Ask a query..." />
+
+    <div class="select-wrapper">
+      <select id="modeSelect">
+        <option value="answer">Only Answer</option>
+        <option value="explanation">Answer with Explanation</option>
+      </select>
+    </div>
+    <div class="back-to-dashboard">
+  <a href="{{ url_for('dashboard') }}">⬅️ Back to Dashboard</a>
+</div>
+
+
+    <button onclick="submitQuestion()">Submit</button>
+
+    <div id="finalAnswerArea" class="response-block final hidden">
+      <h3>🧾 Final Answer</h3>
+      <div id="finalAnswerText"></div>
+      <button class="copy-icon-btn" onclick="copyText('finalAnswerText')">📋 Copy</button>
+    </div>
+
+    <div id="botToggleContainer" class="hidden">
+      <button onclick="toggleBotAnswers()">Bot Answers</button>
+    </div>
+
+    <div id="botAnswers" class="hidden">
+      <div class="response-block groq">
+        <h3>🤖 Groq (LLaMA3)</h3>
+        <div id="groqText"></div>
+        <button class="copy-icon-btn" onclick="copyText('groqText')">📋 Copy</button>
+      </div>
+
+      <div class="response-block gemini">
+        <h3>🌟 Gemini</h3>
+        <div id="geminiText"></div>
+        <button class="copy-icon-btn" onclick="copyText('geminiText')">📋 Copy</button>
+      </div>
+
+      <div class="response-block cohere">
+        <h3>🧠 Cohere</h3>
+        <div id="cohereText"></div>
+        <button class="copy-icon-btn" onclick="copyText('cohereText')">📋 Copy</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function formatAsCodeBlock(text) {
+      if (text.includes("```")) {
+        const match = text.match(/```(?:\w+)?\n?([\s\S]*?)```/);
+        return match ? `<pre><code>${escapeHtml(match[1].trim())}</code></pre>` : escapeHtml(text);
+      }
+      return `<pre><code>${escapeHtml(text)}</code></pre>`;
+    }
+
+    function copyText(divId) {
+      const div = document.getElementById(divId);
+      const text = div.innerText;
+      const tempText = document.createElement("textarea");
+      tempText.value = text;
+      document.body.appendChild(tempText);
+      tempText.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempText);
+      alert("Copied!");
+    }
+
+    async function submitQuestion() {
+      const question = document.getElementById("questionInput").value;
+      const mode = document.getElementById("modeSelect").value;
+
+      if (!question) return alert("Please enter a query.");
+
+      document.getElementById("finalAnswerArea").classList.add("hidden");
+      document.getElementById("botToggleContainer").classList.add("hidden");
+      document.getElementById("botAnswers").classList.add("hidden");
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, mode })
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert("Error: " + data.error);
+        return;
+      }
+
+      document.getElementById("finalAnswerText").innerHTML = formatAsCodeBlock(data.final);
+      document.getElementById("groqText").innerHTML = formatAsCodeBlock(data.groq);
+      document.getElementById("geminiText").innerHTML = formatAsCodeBlock(data.gemini);
+      document.getElementById("cohereText").innerHTML = formatAsCodeBlock(data.cohere);
+
+      document.getElementById("finalAnswerArea").classList.remove("hidden");
+      document.getElementById("botToggleContainer").classList.remove("hidden");
+    }
+
+    function toggleBotAnswers() {
+      const section = document.getElementById("botAnswers");
+      section.classList.toggle("hidden");
+    }
+
+    function toggleDropdown() {
+      const dropdown = document.getElementById("profileDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.closest(".username")) {
+        document.getElementById("profileDropdown").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

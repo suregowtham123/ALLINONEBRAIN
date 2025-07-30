@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #90caf9, #42a5f5); /* Blue gradient */
+      margin: 0;
+      padding: 0;
+    }
+
+    .form-box {
+      max-width: 400px;
+      margin: 100px auto;
+      background: linear-gradient(to right, #a1887f, #6d4c41); /* Brown gradient */
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .form-box img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #bcaaa4;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #4e342e;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #3e2723;
+    }
+
+    .error {
+      color: #ffebee;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-top: 15px;
+      color: #ffffff;
+    }
+
+    a {
+      color: #ffe082;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <img src="/static/logo.png" alt="Logo" />
+    <h2 class="brand-title">ALL-IN-ONE-BRAIN</h2>
+
+    <h3>Login</h3>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form method="POST">
+      <input type="text" name="username" placeholder="Username" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="/signup">Sign up</a></p>
+  </div>
+</body>
+</html>

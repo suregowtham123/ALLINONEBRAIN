@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Learning Courses</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00796b;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 60%;
+      border: 2px solid #4db6ac;
+      border-radius: 8px 0 0 8px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #00796b;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #004d40;
+    }
+
+    .videos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .video-card {
+      width: 300px;
+      background: #f1f8e9;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .video-card iframe {
+      width: 100%;
+      height: 180px;
+      border-radius: 8px;
+    }
+
+    .video-card h4 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+      color: #33691e;
+    }
+
+    .back-box {
+      display: inline-block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background-color: #ffcc80;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .back-box a {
+      text-decoration: none;
+      color: #e65100;
+      font-size: 16px;
+    }
+
+    .back-box a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Explore Learning Courses</h2>
+    
+    <form method="POST" action="/courses">
+      <input type="text" name="search" placeholder="Search for courses or topics..." required />
+      <button type="submit">Search</button>
+    </form>
+
+    {% if videos %}
+      <div class="videos">
+        {% for video in videos %}
+          <div class="video-card">
+            <iframe src="https://www.youtube.com/embed/{{ video.video_id }}" frameborder="0" allowfullscreen></iframe>
+            <h4>{{ video.title }}</h4>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="back-box">
+      <a href="/dashboard">← Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>
