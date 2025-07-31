@@ -4,3 +4,4 @@ cohere
 groq
 google-generativeai
 python-dotenv
+kaggle
