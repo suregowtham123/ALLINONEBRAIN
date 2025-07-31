@@ -7,7 +7,7 @@
 
 This platform is designed to help users get the most out of AI tools, curated educational resources, and public datasets — all under one login system powered by secure email-based OTP authentication.
 
----
+
 
 ## 🔐 Features
 
@@ -28,7 +28,7 @@ After successful login, users can choose from:
 - Session data is visualized in analytics charts.
 - Admin can generate usage reports on demand.
 
----
+
 
 ## 🖼️ Screenshots
 
@@ -41,10 +41,13 @@ After successful login, users can choose from:
 ### 📊 User Analytics (Admin View)
 ![Analytics](./assets/analytics.png)
 
----
+### 📊 PIE Analytics (Admin View)
+![Analytics](./assets/analytics1.png)
 
 
----
+
+
+
 
 ## 🚀 How to Run Locally
 
