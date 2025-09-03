@@ -26,8 +26,7 @@ COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-os.environ['KAGGLE_USERNAME'] = 'crazyboy11111'
-os.environ['KAGGLE_KEY'] = 'feed5e8d0417ad1e0b13fe42148900e6'
+
 
 
 # Initialize AI clients
